@@ -69,3 +69,16 @@ class ThriftController extends Controller
     }
 }
 ```
+
+Also needs to propagate static $_TSPEC properties of doctrine models. Doctrine doesn't call __construct when fetch already persistent documents.
+```php
+class EpicBattlerBundle extends Bundle
+{
+    public function boot()
+    {
+        /** @var DocumentManager $dm */
+        $dm = $this->container->get('doctrine_mongodb')->getManager();
+        $dm->getEventManager()->addEventSubscriber(new LoadMetadataSubscriber());
+    }
+}
+```
